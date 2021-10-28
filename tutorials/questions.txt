@@ -1,0 +1,8 @@
+How do you test APIs like this?
+How do you connect a machine learning function structure in the backend? Just import it as a function in one of the django apps?
+CRUD application includes Delete, is there any best practices for backing up something as you delete it?
+API should return primary keys for property object?
+
+How do you update projects that are already deployed? What is this process called?
+
+Is there a good primer to get started on understanding what is DevOps?
