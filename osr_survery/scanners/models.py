@@ -33,3 +33,9 @@ class Scan(models.Model):
 
     def __str__(self):
         return "{}: {}".format(str(self.scan_date), str(self.property))
+
+
+class Note(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    note_text = models.TextField(default="message not submitted")
+    

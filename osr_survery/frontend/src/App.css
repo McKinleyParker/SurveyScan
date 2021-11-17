@@ -1,0 +1,77 @@
+.App {
+  text-align: center;
+}
+
+
+
+.nav_bar {
+  background-color: #282c34;
+  min-height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.upload_wrapper {
+  background-color: aquamarine;
+  margin: 2em;
+  padding: 1em;
+}
+
+.post_wrapper {
+  background-color: rgb(42, 168, 126);
+  margin: 2em;
+  padding: 1em;
+}
+
+.submit_btn {
+  font-size: 8;
+  max-height: 2em;
+  margin: 1em;
+}
+
+button {
+  background-color: white;
+}
+
+button:hover {
+  background-color: ghostwhite;
+}
+
+.property_list_wrapper {
+  margin: 2em;
+  padding: 1em;
+  background-color: rgb(42, 168, 126);
+}
+
+.App-logo {
+  max-width: 2em;
+  padding: .1em;
+  margin: 1em;
+  background-color: grey;
+  border-radius: .2em;
+  border-color: grey;
+}
+
+img.preview_image {
+  max-height: 12em;
+  max-width: 16em;
+  height: auto;
+  width: auto;
+  padding: .5em;
+  margin: .7em;
+  background-color: lightgray;
+}
+
+.edit_box {
+  height: 16em;
+  word-wrap: break-word;
+  word-break: break-all;
+}

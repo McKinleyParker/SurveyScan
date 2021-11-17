@@ -2,13 +2,20 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 from rest_framework import viewsets
-from .serializers import PropertySerializer, ScanSerializer
-from .models import Property, Scan
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import PropertySerializer, ScanSerializer, NoteSerializer
+from .models import AppUser, Property, Scan
 
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
 from rest_framework.decorators import api_view
+
+from .tesseract_backend.main import scan_to_string
+from PIL import Image
+
+import json
 
 # Create your views here.
 def index(request):
@@ -72,16 +79,72 @@ def property_detail(request, pk):
 
 @api_view(['GET', 'POST'])
 def scan_list(request):
-    pass
-    #return all scans or add a new one - same as above
+    print("give me something ok?")
+    if request.method == 'GET':
+        scans = Scan.objects.all()
+        scan_serializer = PropertySerializer(scans, many=True)
+        return JsonResponse(scan_serializer.data, safe=False)
+
+    if request.method == 'POST':
+        # print("Are we posting at least?")
+        # print(request.data)
+        request_data = request.data
+        #request_data = JSONParser().parse(request)
+        # good chance to check what is missing and send that as a response
+        # print("-------------------------------------------------------")
+        # print("the hunt begins")
+        scan_serializer = ScanSerializer(data=request_data, partial=True)
+        # print("serializer made")
+        scan_serializer.user = AppUser.objects.get(pk=request_data["user"])  
+        # print("user added")
+        scan_serializer.property = Property.objects.get(pk=request_data["property"])  
+        # print("property added")  
+        # print(scan_serializer.initial_data)
+        if scan_serializer.is_valid():
+            # print("better than you think")
+            new_scan_object = scan_serializer.save()
+            # print("here comes the image")
+            # print(new_scan_object.image.name)
+            # print(new_scan_object.image.path)
+            just_the_image = Image.open(new_scan_object.image.path) # scan the imate 
+            # just_the_image.show()
+            # bw_image = just_the_image.convert("L")
+            # bw_image.save("dorks.png")
+            scan_text_found = scan_to_string(just_the_image)
+            # print(scan_text_found)
+            new_scan_object.raw_text = scan_text_found
+            return_scan_serializer = ScanSerializer(new_scan_object) # needed to add the found text into the response
+            scan_serializer.save() # save the unreviewed text to the database as well
+            return JsonResponse(return_scan_serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(scan_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def scan_detail(request, pk):
-    pass
+    try:
+        scan = Scan.objects.get(pk=pk)
+    except Scan.DoesNotExist:
+        return JsonResponse({'message': 'This scan does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
     # single specific scan - same as above
+    # this needs a partial update for adding back the correct text from the web app
+    if request.method == 'PUT':
+        scan_data = JSONParser().parse(request)
+        scan_serializer = ScanSerializer(scan, data=scan_data, partial=True)
+        if scan_serializer.is_valid():
+            scan_serializer.save()
+            return JsonResponse(scan_serializer.data)
+        return JsonResponse(scan_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'GET':
+        scan_serializer = ScanSerializer(scan)
+        return JsonResponse(scan_serializer.data)
+
+    elif request.method == 'DELETE':
+        scan.delete()
+        return JsonResponse({'message': "Scan was deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 
 
@@ -113,4 +176,24 @@ def get_scans_by_property(request, pk):
         return JsonResponse(scan_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+        
+class PostNote(APIView):
+    def get(self, request):
+        data = {
+            'first_name': 'grant',
+            'last_name': 'zhu'
+        }
+        return Response(data)
+
+    def post(self, request):
+        request_data = request.data
+
+        serializer = NoteSerializer(data=request_data)
+        serializer.user = AppUser.objects.get(pk=request_data["user"])   
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+
+        
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
         

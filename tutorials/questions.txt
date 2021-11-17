@@ -6,3 +6,15 @@ API should return primary keys for property object?
 How do you update projects that are already deployed? What is this process called?
 
 Is there a good primer to get started on understanding what is DevOps?
+
+
+How can I easily map what type of objects my endpoints need?
+Why do all my get requests go through each time I send a post request?
+Why do my API's get called twice? (and how can I stop this for put requests)
+
+Why is it so important to have the onChange update function be for the form not for individual fields?
+
+Why are my states always logged as one state behind?
+
+
+
