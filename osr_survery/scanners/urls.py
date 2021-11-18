@@ -7,4 +7,5 @@ urlpatterns = [
     path('api/note_list/', views.PostNote.as_view()),
     path('api/property_list/', views.property_list),
     path('api/scan_list/', views.scan_list),
+    path('api/nearby_properties/', views.nearby_properties),
 ]

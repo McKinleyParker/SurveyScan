@@ -12,8 +12,10 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 from rest_framework.decorators import api_view
 
-from .tesseract_backend.main import scan_to_string
 from PIL import Image
+
+from .tesseract_backend.main import scan_to_string
+from .gis_distance import find_twenty_closest
 
 import json
 
@@ -73,7 +75,20 @@ def property_detail(request, pk):
         property.delete()
 
 
-
+@api_view(['GET'])
+def nearby_properties(request):
+    # should return the top 20 nearby properties
+     if request.method == 'GET':
+        properties = Property.objects.all()
+        print("The request looks like this: ")
+        latitude = (request.query_params.get("latitude", None))
+        longitude = (request.query_params.get("longitude", None))
+        #measure the distance of all properties from user and return top 20 closest
+        user_lat_lon = {"lat":latitude, "lon":longitude}
+        closest_properties = find_twenty_closest(user_lat_lon, properties)
+        closest_properties = Property.objects.filter(pk__in=closest_properties)
+        property_serializer = PropertySerializer(closest_properties, many=True)
+        return JsonResponse(property_serializer.data, safe=False)
 
 ### Scan Views ###
 

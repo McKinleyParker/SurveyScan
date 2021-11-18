@@ -13,11 +13,12 @@ export default function PropertyList() {
     const [selected, setSelected] = useState("");
     const [lat, setLat] = useState("");
     const [lon, setLon] = useState("");
+    const [options, setOptions] = useState("");
 
     //redux hook
     const reduxState = useSelector((reduxState) => reduxState);
     const dispatch = useDispatch();
-    const {uploadPropertyList, addNewProperty} = bindActionCreators(actionCreators, dispatch);
+    const {uploadPropertyList, addNewProperty, setProperty} = bindActionCreators(actionCreators, dispatch);
 
     console.log(uploadPropertyList);
     console.log(addNewProperty);
@@ -28,7 +29,17 @@ export default function PropertyList() {
         const fetchData = async () => {
             const response = await axios.get(PropertyApi);
             console.log(response);
+
+            const propertyListObject = response.data;
+
+
+            let optionItems = propertyListObject.map((property) =>
+                <option key={property.pk} value={property.pk}>{property.property_name}</option>
+            );
+
             setPropertyList(response.data);
+            setOptions(optionItems);
+
         }
         
         fetchData().catch(console.error);
@@ -43,14 +54,18 @@ export default function PropertyList() {
             setLat(position.coords.latitude);
             setLon(position.coords.longitude);
             }); 
-
-        
     }
 
     // 
 
     const handleChoice = (e) => {
         console.log("you have chosen...poorly");
+    }
+
+    const handleSelection = (e) => {
+        const selectedProperty = e.target.value;
+        setSelected(selectedProperty);
+        setProperty(selectedProperty);
     }
 
     return propertyList.length ? (
@@ -72,6 +87,10 @@ export default function PropertyList() {
                 <button onClick={() => addNewProperty(1)}>Add One</button>
                 <button onClick={() => uploadPropertyList(1)}>Subtract One</button>
                 <h5>Total: {reduxState.propertyList}</h5>
+            </div>
+            <div>
+                <h2>Dropdown Menu</h2>
+                <select onChange={handleSelection}>{options}</select>
             </div>
            
             

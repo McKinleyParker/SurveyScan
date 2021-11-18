@@ -18,3 +18,12 @@ export const addNewProperty = (newProperty) => {
     }
 }
     
+export const setProperty = (propertyChoice) => {
+    return (dispatch) => {
+        dispatch({
+            type: "set", 
+            payload: propertyChoice,
+        })
+    }
+}
+    

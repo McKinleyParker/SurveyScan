@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import { useSelector, useDispatch} from "react-redux";
 
 const ScanAPI = "http://127.0.0.1:8000/scanners/api/scan_list/";
 
@@ -9,15 +9,11 @@ export default function ScanUpload() {
 
   const [image, setImage] = useState('');
   const [previewImage, setPreviewImage] = useState('');
-  const [propertyName, setPropertyName] = useState('');
   const [extractedText, setExtractedText] = useState('');
 
+  // Redux Stuff
+  const reduxState = useSelector((reduxState) => reduxState);
 
-
-
-  const handleChange = (e) => {
-    setPropertyName(e.target.value);
-  };
 
   const handleImageChange = (e) => {
     //setImage({image:URL.createObjectURL(e.target.files[0]),name: e.target.files[0].name});
@@ -35,7 +31,7 @@ export default function ScanUpload() {
     //console.log(this.state);
     let form_data = new FormData();
     form_data.append('image', image);
-    form_data.append('property', 1);
+    form_data.append('property', reduxState.propertyList);
     form_data.append('user', 1);
     console.log(form_data);
     axios.post(ScanAPI, form_data, {
@@ -55,7 +51,7 @@ export default function ScanUpload() {
     <div className="upload_wrapper">
       <form onSubmit={handleSubmit}>
         <p>
-          <input type="text" placeholder='property name' id='property_name' value={propertyName} onChange={handleChange} required/>
+          <h4>Current property pk: {reduxState.propertyList}</h4>
         </p>
         <div>
           <img className="preview_image" src={previewImage} alt="preview image" />
