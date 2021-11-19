@@ -1,0 +1,17 @@
+Important Features
+
+1) Allow patching of edited text back to same object
+2) Easy way to read in list of buildings from csv
+3) Update text extraction OCR with latest build from Kaggle
+4) Responsive design using emotion
+    a) Text and image scales with different screen widths
+    b) In landscape, image preview can be seen side by side with text
+5) Authetication, logins, etc
+
+
+Optional
+
+1) Map widget with searchbar to select building to replace dropdown menu
+2) Wordcloud representation of all the text gathered in each buildings (seperate page)
+3) Response from OCR includes an images with bounded boxes to show what text was found
+4) Google OCR API to replace current tesseract module

@@ -13,14 +13,10 @@ function App() {
     <div className="App">
       <header className="nav_bar">
         <img src={behind_firewall_logo} className="App-logo" alt="logo" />
-        <p>
-          PropertyScan
-        </p>
+        <h1>PropertyScan</h1>
       </header>
-      <PropertyList />
-      <ScanUpload />
-      <PostTest />
       <NearbyPropertyFinder />
+      <ScanUpload />
     </div>
   );
 }

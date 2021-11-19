@@ -33,7 +33,7 @@ def find_twenty_closest(user_lat_long, properties):
         all_properties_df.loc[count, "pk"] = property.pk
         all_properties_df.loc[count, "distance"] = distance
     #sort the properties for the closest
-    sorted_properties = all_properties_df.sort_values(by="distance", ascending=False).tail(2)
+    sorted_properties = all_properties_df.sort_values(by="distance", ascending=False).tail(3)
     closest_twenty_properties = sorted_properties["pk"].tolist()
 
     return closest_twenty_properties

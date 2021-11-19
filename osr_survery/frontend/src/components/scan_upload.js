@@ -51,7 +51,7 @@ export default function ScanUpload() {
     <div className="upload_wrapper">
       <form onSubmit={handleSubmit}>
         <p>
-          <h4>Current property pk: {reduxState.propertyList}</h4>
+          <h4 className="debuggingText">Current property pk: {reduxState.propertyList}</h4>
         </p>
         <div>
           <img className="preview_image" src={previewImage} alt="preview image" />

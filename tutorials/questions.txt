@@ -18,3 +18,12 @@ Why are my states always logged as one state behind?
 
 
 
+
+
+Questions Nov 19
+-------------------------------------------------------------
+Redux is supposed to always return a close of state right?
+
+Is there a set list of actions you should build ahead of time or is it really build them as you need?
+
+If I want to create a multi-page webapp, does/should redux remember the state?

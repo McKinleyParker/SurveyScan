@@ -11,17 +11,28 @@ import {actionCreators} from "../state/action_creators/index";
 const NearbyPropertyApi = "http://127.0.0.1:8000/scanners/api/nearby_properties/";
 
 export default function NearbyPropertyFinder() {
-    const [propertyList, setPropertyList] = useState([]);
     // note to self: combine these into one hook
     const [lat, setLat] = useState("");  
     const [lon, setLon] = useState("");
-    const [options, setOptions] = useState("");
+    const [options, setOptions] = useState("<option>None</option>");
     const [selected, setSelected] = useState("");
 
     //redux hook
     const reduxState = useSelector((reduxState) => reduxState);
     const dispatch = useDispatch();
-    const {uploadPropertyList, addNewProperty, setProperty} = bindActionCreators(actionCreators, dispatch);
+    const {setProperty} = bindActionCreators(actionCreators, dispatch);
+
+
+    // setting the single default value for dropdown list
+    useEffect(() => {
+        const fetchData = () => {
+            const propertyListObject = [{pk:0,property_name:"not loaded"}];
+            let optionItems = propertyListObject.map((property) =>
+                <option key={property.pk} value={property.pk}>{property.property_name}</option>
+            );
+            setOptions(optionItems);
+        }
+    },[]);  
 
     const handleLocate = async () => {
         //navigator.geolocation.getCurrentPosition(function(position) {
@@ -59,7 +70,6 @@ export default function NearbyPropertyFinder() {
             <option key={property.pk} value={property.pk}>{property.property_name}</option>
         );
 
-        setPropertyList(response.data);
         setOptions(optionItems);
 
     }
@@ -74,24 +84,21 @@ export default function NearbyPropertyFinder() {
     return  (
         <div className="property_list_wrapper">
             
-            <div>
-                <h1>Find Location</h1>
-                <button onClick={handleLocate}>Locate Things</button>
-                <b>Lat: {lat} ----- Lon: {lon}</b>
+            <div className="geolocationStep">
+                <h1>Find Current Location</h1>
+                <button onClick={handleLocate}>Fetch Geolocation</button>
+                <div>
+                    <b>Lat: {lat}</b> <br/> <b> Lon: {lon}</b>
+                </div>
             </div>
             
-            <div>
+            <div className="geolocationStep">
                 <h1>Find Properties</h1>
-                <button onClick={fetchData}>Fetch Things</button>
+                <button onClick={fetchData}>Fetch Properties</button>
             </div>
             
-            <div>
+            <div className="geolocationStep">
                 <h1>Nearby Properties</h1>
-                {propertyList.map((building) => {
-                    return (
-                        <div key={building.property_name}>ID {building.pk}: {building.property_name}</div>
-                    );
-                })}
                 <select onChange={handleSelection}>{options}</select>
             </div>
 
